@@ -1,0 +1,302 @@
+### Resumen Táctico
+
+El problema pide responder consultas del **$k$-ésimo menor valor** del conjunto de resultados $\{a_l \oplus x, a_{l+1} \oplus x, \dots, a_r \oplus x\}$ para un rango $[l, r]$, un número $x$ y una posición $k$.
+
+---
+
+### Visión de Examen (La Fusión Perfecta de Conceptos)
+
+Este problema es la **fusión exacta de lo que aprendiste en los dos problemas anteriores**:
+
+1. **Rango $[l, r]$:** Usamos resta de prefijos entre `roots[r]` y `roots[l - 1]` (como en el Problema B).
+2. **Navegación del $k$-ésimo:** Bajamos bit a bit desde el bit 29 al 0 comparando $k$ contra la cantidad de elementos en la rama menor (como en el Problema C).
+
+#### El Truco del XOR con $x$:
+
+¿Cómo decide el bit de $x$ cuál rama es la "menor"?
+
+Para un bit $b$, sea `bitX` el bit actual de $x$:
+
+* Si tomamos en el Trie la rama `bitX`: la operación $a_i \oplus x$ produce un bit **`0`** (porque $\text{bitX} \oplus \text{bitX} = 0$). **¡Esta es la rama de los valores menores!**
+* Si tomamos la rama `1 - bitX`: la operación $a_i \oplus x$ produce un bit **`1`** (porque $(1 - \text{bitX}) \oplus \text{bitX} = 1$). **¡Esta es la rama de los valores mayores!**
+
+Por lo tanto, en cada bit $b$:
+
+1. Definimos `smallerBranch = bitX`.
+2. Calculamos la cantidad de elementos en el rango $[l, r]$ que caen en `smallerBranch`:
+
+$$\text{countSmaller} = \text{count}(\text{roots}[r].\text{child}[\text{smallerBranch}]) - \text{count}(\text{roots}[l-1].\text{child}[\text{smallerBranch}])$$
+
+
+3. **Si $k \le \text{countSmaller}$:** El $k$-ésimo valor tiene bit `0` en la posición $b$. Avanzamos por `smallerBranch`.
+4. **Si $k > \text{countSmaller}$:** El $k$-ésimo valor tiene bit `1` en la posición $b$. Restamos $\text{countSmaller}$ a $k$, sumamos $2^b$ a la respuesta y avanzamos por `1 - smallerBranch`.
+
+---
+
+### Código Completo (Listo para Examen)
+
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+public class Main {
+    static class FastScanner {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer("");
+
+        String next() {
+            while (!st.hasMoreTokens()) {
+                try {
+                    String line = br.readLine();
+                    if (line == null) return null;
+                    st = new StringTokenizer(line);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+    }
+
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner();
+        PrintWriter out = new PrintWriter(System.out);
+
+        int n = sc.nextInt();
+        // 30 bits alcanzan para a_i <= 10^9 < 2^30
+        PersistentTrieRangeXor trie = new PersistentTrieRangeXor(30, n);
+
+        for (int i = 1; i <= n; i++) {
+            int a = sc.nextInt();
+            trie.insert(i, i - 1, a);
+        }
+
+        int q = sc.nextInt();
+        for (int i = 0; i < q; i++) {
+            int l = sc.nextInt();
+            int r = sc.nextInt();
+            int x = sc.nextInt();
+            int k = sc.nextInt();
+
+            int ans = trie.queryKthXor(l, r, x, k);
+            out.println(ans);
+        }
+
+        out.flush();
+        out.close();
+    }
+}
+
+class PersistentTrieRangeXor {
+    TrieNodeRange[] roots;
+    private final int maxBits;
+
+    public PersistentTrieRangeXor(int maxBits, int maxElements) {
+        this.maxBits = maxBits;
+        this.roots = new TrieNodeRange[maxElements + 2];
+        this.roots[0] = new TrieNodeRange(); // Versión 0 vacía
+    }
+
+    public void insert(int version, int prevVersion, int val) {
+        this.roots[version] = new TrieNodeRange(this.roots[prevVersion]);
+
+        TrieNodeRange currOld = this.roots[prevVersion];
+        TrieNodeRange currNew = this.roots[version];
+
+        currNew.cnt++;
+
+        for (int b = maxBits - 1; b >= 0; b--) {
+            int bit = (val >> b) & 1;
+
+            TrieNodeRange nextOld = (currOld != null) ? currOld.children[bit] : null;
+            TrieNodeRange nextNew = new TrieNodeRange(nextOld);
+
+            nextNew.cnt = (nextOld != null ? nextOld.cnt : 0) + 1;
+            currNew.children[bit] = nextNew;
+
+            currOld = nextOld;
+            currNew = nextNew;
+        }
+    }
+
+    public int queryKthXor(int l, int r, int x, int k) {
+        TrieNodeRange nodeR = this.roots[r];
+        TrieNodeRange nodeL = this.roots[l - 1];
+        int ans = 0;
+
+        for (int b = maxBits - 1; b >= 0; b--) {
+            int bitX = (x >> b) & 1;
+            int smallerBranch = bitX; // El camino que produce 0 en (a_i XOR x)
+
+            int countR = (nodeR != null && nodeR.children[smallerBranch] != null) ? nodeR.children[smallerBranch].cnt : 0;
+            int countL = (nodeL != null && nodeL.children[smallerBranch] != null) ? nodeL.children[smallerBranch].cnt : 0;
+            int countSmaller = countR - countL;
+
+            if (k <= countSmaller) {
+                // El k-ésimo valor tiene bit 0 en la posición b
+                nodeR = (nodeR != null) ? nodeR.children[smallerBranch] : null;
+                nodeL = (nodeL != null) ? nodeL.children[smallerBranch] : null;
+            } else {
+                // El k-ésimo valor tiene bit 1 en la posición b
+                k -= countSmaller;
+                ans |= (1 << b);
+                int largerBranch = 1 - smallerBranch;
+                nodeR = (nodeR != null) ? nodeR.children[largerBranch] : null;
+                nodeL = (nodeL != null) ? nodeL.children[largerBranch] : null;
+            }
+        }
+
+        return ans;
+    }
+}
+
+class TrieNodeRange {
+    TrieNodeRange[] children;
+    int cnt;
+
+    public TrieNodeRange() {
+        this.children = new TrieNodeRange[2];
+        this.cnt = 0;
+    }
+
+    public TrieNodeRange(TrieNodeRange old) {
+        this.children = new TrieNodeRange[2];
+        if (old != null) {
+            this.children[0] = old.children[0];
+            this.children[1] = old.children[1];
+            this.cnt = old.cnt;
+        } else {
+            this.cnt = 0;
+        }
+    }
+}
+
+```
+
+---
+
+### Resumen de Patrones de Persistencia para tu Examen
+
+| Problema / Dominio | Técnica Clave | Atributo en Nodo |
+| --- | --- | --- |
+| **Prefijos / Cadenas** | Path Copying sobre alfabeto 'a'-'z' | `prefixCount` |
+| **Rango $[l, r]$** | Resta de versiones `roots[r] - roots[l-1]` | `cnt` |
+| **$k$-ésimo elemento** | Búsqueda binaria guiada sobre Trie 0-1 | `cnt` |
+| **Árboles / Ancestros** | La versión $i$ se hereda de `roots[parent[i]]` | `maxDepth` / `maxIdx` |
+| **XOR con Rango y $k$-ésimo** | Rama `bitX` da 0, rama `1-bitX` da 1 + resta de versiones | `cnt` |
+
+--
+Mas explicacion
+Vamos a desacoplar completamente el problema **E** para entenderlo paso a paso sin mezclar nada.
+
+---
+
+### 1. ¿Qué nos pide exactamente el problema?
+
+Tenemos un arreglo $a = [a_1, a_2, \dots, a_n]$.
+Nos dan consultas con 4 datos: $(l, r, x, k)$.
+
+Si tomamos la subsección del arreglo entre las posiciones $l$ y $r$, y a **cada elemento le aplicamos XOR con $x$**, obtenemos una lista de números:
+
+$$\{a_l \oplus x, \quad a_{l+1} \oplus x, \quad \dots, \quad a_r \oplus x\}$$
+
+Si **ordenamos esa lista de menor a mayor**, ¿cuál es el número que queda en la posición $k$?
+
+---
+
+### 2. Olvidémonos por un segundo de $x$ y de $l, r$
+
+Imagina que **solo** quieres armar un número binario bit a bit (del bit 29 al bit 0) para encontrar el $k$-ésimo menor de un grupo de números.
+
+Para cada bit (empezando desde el más significativo, el de la izquierda):
+
+* Queremos saber cuántos números del grupo **empiezan con el bit `0**`.
+* Llamemos a esa cantidad `cantidad_ceros`.
+
+Hacemos una pregunta simple: **¿El $k$-ésimo número está en el grupo de los que empiezan con `0`?**
+
+1. **Si $k \le \text{cantidad\_ceros}$:**
+* Sí, está en ese grupo.
+* Entonces el bit de nuestro resultado final **es `0**`.
+* Nos movemos a la rama del `0` para decidir el siguiente bit.
+
+
+2. **Si $k > \text{cantidad\_ceros}$:**
+* No, se "desbordó" del grupo del `0`, así que debe estar en el grupo de los que empiezan con `1`.
+* El bit de nuestro resultado final **es `1**`.
+* Como ya descartamos los `cantidad_ceros` números menores, ajustamos $k$:
+
+$$k = k - \text{cantidad\_ceros}$$
+
+
+* Nos movemos a la rama del `1` para decidir el siguiente bit.
+
+
+
+---
+
+### 3. Ahora añadimos el efecto de $x$ ($a_i \oplus x$)
+
+El XOR cambia el orden natural porque invierte algunos bits:
+
+* Si aplicamos XOR a un bit con **mismo valor** (`0` XOR `0` o `1` XOR `1`), el resultado es **`0`** (un valor menor).
+* Si aplicamos XOR a un bit con **diferente valor** (`0` XOR `1` o `1` XOR `0`), el resultado es **`1`** (un valor mayor).
+
+Por lo tanto, si el bit actual de $x$ es $bitX$:
+
+* **La rama que produce el resultado menor (`0`)** es ir por la rama $bitX$ en el Trie.
+* **La rama que produce el resultado mayor (`1`)** es ir por la rama $1 - bitX$ en el Trie.
+
+> **Regla de oro:**
+> Para que $a_i \oplus x$ dé `0` en esta posición, $a_i$ debe tener el **mismo bit** que $x$.
+> Así que la rama "menor" ahora es simplemente **la rama igual al bit de $x$**.
+
+---
+
+### 4. Por último: ¿Cómo aislamos el rango $[l, r]$?
+
+Como el Trie es persistente, tenemos una versión del Trie para cada prefijo del arreglo:
+
+* La **versión $r$** contiene todos los números desde $a_1$ hasta $a_r$.
+* La **versión $l-1$** contiene todos los números desde $a_1$ hasta $a_{l-1}$.
+
+Para saber cuántos números en una rama pertenecen **únicamente al rango $[l, r]$**, simplemente restamos las frecuencias:
+
+$$\text{cantidad\_en\_rango} = \text{frecuencia en versión } r - \text{frecuencia en versión } (l-1)$$
+
+---
+
+### 5. Juntando todo en 4 pasos por cada bit
+
+Para responder la consulta $(l, r, x, k)$ de arriba a abajo en los 30 bits:
+
+1. **Miramos el bit de $x$:** Sea $bitX$ el bit actual de $x$.
+2. **Contamos los menores:** Calculamos cuántos elementos del rango $[l, r]$ tienen el bit $bitX$ en el Trie.
+
+$$\text{menores} = \text{cnt}(\text{nodo}_r.\text{hijo}[bitX]) - \text{cnt}(\text{nodo}_{l-1}.\text{hijo}[bitX])$$
+
+
+3. **Decidimos el camino:**
+* **Si $k \le \text{menores}$:** El bit del resultado es `0`. Avanzamos ambos punteros (versión $r$ y versión $l-1$) hacia el hijo $bitX$.
+* **Si $k > \text{menores}$:** El bit del resultado es `1`. Restamos $k = k - \text{menores}$, sumamos $2^{bit}$ a nuestra respuesta, y avanzamos ambos punteros hacia el hijo $1 - bitX$.
+
+
+4. **Repetimos** hasta llegar al bit 0.
+
+---
+
+### Ejemplo Visual Mental
+
+Supón que $x = 5$ (en binario `101`) y estamos analizando el primer bit (que es `1`):
+
+* La opción que produce `0` en el XOR es buscar números que tengan bit **`1`** (porque $1 \oplus 1 = 0$).
+* Contamos cuántos números en $[l, r]$ tienen bit `1` en esa posición.
+* Si $k$ entra en esa cantidad $\Rightarrow$ el primer bit de la respuesta es `0` y seguimos navegando por la rama `1`.
+* Si $k$ no entra $\Rightarrow$ el primer bit de la respuesta es `1`, ajustamos $k$ y nos vemos obligados a ir por la rama `0`.

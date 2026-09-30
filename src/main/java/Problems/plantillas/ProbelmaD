@@ -144,3 +144,70 @@ class TrieNodeTree {
         }
     }
 }
+
+
+______
+Explicacion
+La técnica del **`maxIdx`** (o en este caso, **`maxDepth`**) es uno de los trucos más elegantes y potentes cuando trabajamos con estructuras persistentes. Te la explico paso a paso para que la recuerdes sin fórmulas raras.
+
+---
+
+### 1. El Dilema del Problema
+
+El problema te pide buscar el **XOR máximo** con un número $x$, pero **NO** usando todos los números del árbol, sino **únicamente los nodos en el camino vertical** desde el nodo $u$ hasta su ancestro $w$.
+
+Si miramos la rama desde la raíz ($1$) hasta $u$:
+
+$$\text{Raíz } (1) \longrightarrow \dots \longrightarrow w \longrightarrow \dots \longrightarrow u$$
+
+* La versión persistente $u$ del Trie **contiene TODOS** los nodos desde la raíz ($1$) hasta $u$.
+* **El problema:** La versión $u$ también incluye a los ancestros que están por encima de $w$ (los que están entre $1$ y $w - 1$). ¡Y esos NO los queremos!
+
+---
+
+### 2. La Solución Intuítiva: Usar Profundidades (`depth`)
+
+Imagina que a cada commit le asignamos una "altura" o **profundidad** (`depth`):
+
+* La raíz (commit 1) tiene `depth = 1`.
+* Sus hijos tienen `depth = 2`, etc.
+
+El ancestro $w$ tiene una profundidad `depth[w]`. Todos los nodos en el camino de $u$ a $w$ tienen una profundidad **mayor o igual** a `depth[w]`:
+
+$$\text{Nodo válido } c \iff \text{depth}[c] \ge \text{depth}[w]$$
+
+Si un nodo está más arriba de $w$, su profundidad será **estrictamente menor** que `depth[w]` (INVÁLIDO).
+
+---
+
+### 3. ¿Cómo entra la técnica del `maxDepth`?
+
+Cuando insertamos la firma de un commit en el Trie, **guardamos en cada nodo del Trie la máxima profundidad (`maxDepth`) que ha pasado por ahí**.
+
+Como Path Copying crea copias de nodos en cada versión:
+
+* Un nodo del Trie tendrá un `maxDepth = 7` si entre las palabras/números almacenados en esa rama del Trie, al menos uno proviene de un commit con profundidad $\ge 7$.
+
+#### ¿Cómo se usa esto durante la consulta del XOR Máximo?
+
+Normalmente, para maximizar el XOR con un bit $b$ del número $x$:
+
+1. Si el bit de $x$ es `0`, queremos ir al hijo `1`.
+2. Si el bit de $x$ es `1`, queremos ir al hijo `0`.
+
+**Aquí es donde ocurre la magia del `maxDepth`:**
+Antes de dar el salto hacia el hijo deseado, le hacemos una pregunta clave:
+
+> *"Oye, hijo `1`, ¿tienes algún número guardado cuya profundidad sea $\ge \text{depth}[w]$?"*
+
+* **Si responde SÍ (`child.maxDepth >= depth[w]`):** ¡Perfecto! Ese camino tiene al menos un número válido dentro de nuestro rango vertical. Tomamos ese camino y sumamos ese bit a la respuesta.
+* **Si responde NO (o es `null`):** Ese camino solo contiene números de commits más arriba de $w$ (inválidos). Nos vemos obligados a ir por el otro camino (`bitX`).
+
+---
+
+### En Resumen: La Filosofía de la Técnica
+
+> En lugar de "borrar" o "filtrar" elementos de la versión anterior, la técnica de `maxIdx` / `maxDepth` **deja que todos los elementos coexistan en el Trie**, pero le pone una **etiqueta de fecha/profundidad límite** a cada rama.
+> Durante la consulta, simplemente **ignoramos las ramas que no alcancen la profundidad o el índice mínimo requerido**.
+
+Es un filtro $O(1)$ en cada bit del Trie que te evita tener que reconstruir o restar estructuras.

@@ -1,3 +1,44 @@
+### Resumen Táctico
+
+El problema pide mantener un **multiconjunto de enteros no negativos** con historial de versiones que soporta tres operaciones:
+
+1. **Insertar $x$** a partir de la versión $v$.
+2. **Eliminar $x$** a partir de la versión $v$.
+3. **Consultar el $k$-ésimo menor elemento** de la versión $v$ (sin modificar el multiconjunto).
+
+---
+
+### Visión de Examen (Cómo razonar el problema)
+
+1. **¿Por qué un Trie 0-1 Persistente (o Segment Tree Persistente)?**
+* Los valores $x$ llegan hasta $10^9 < 2^{30}$, por lo que se pueden representar en binario usando **30 bits**.
+* Queremos saber el $k$-ésimo elemento menor. Un Trie 0-1 funciona exactamente como un Segment Tree sobre el rango $[0, 2^{30}-1]$ donde el hijo izquierdo (`bit 0`) contiene los números menores y el hijo derecho (`bit 1`) los números mayores.
+
+
+2. **Búsqueda del $k$-ésimo elemento:**
+* En cada nivel del árbol (del bit 29 al bit 0), miramos la cantidad de elementos en el subárbol izquierdo (`leftCnt`).
+* Si $k \le \text{leftCnt}$, el $k$-ésimo elemento **está a la izquierda** (su bit actual es `0`).
+* Si $k > \text{leftCnt}$, el $k$-ésimo elemento **está a la derecha** (su bit actual es `1`). Restamos $\text{leftCnt}$ a $k$ ($k = k - \text{leftCnt}$) y sumamos $2^b$ a la respuesta.
+
+
+
+---
+
+### ¿Qué cambia respecto a tu plantilla previa de Trie 0-1?
+
+1. **Atributo del nodo:** Cambiamos `maxIdx` por **`cnt`** (frecuencia total de números almacenados en ese subárbol).
+2. **Operación unificada `update`:** En lugar de hacer métodos separados para insertar y eliminar, creamos un único método `update(version, prevVersion, x, delta)` donde:
+* Para **insertar** enviamos `delta = +1`.
+* Para **eliminar** enviamos `delta = -1`.
+
+
+3. **Consulta `queryKth`:** Navega por los bits comparando $k$ contra la cantidad de elementos a la izquierda.
+
+---
+
+### Código Completo (Listo para Examen)
+
+```java
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -140,3 +181,5 @@ class TrieNodeKth {
         }
     }
 }
+
+```
