@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="KHelperProblems">
+    <option name="problemsMap">
+      <map>
+        <entry key="JAVA:a_historial_de_diccionario">
+          <value>
+            <ProblemData>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/problems/a_historial_de_diccionario/JSolution.java" />
+              <option name="language" value="JAVA" />
+              <option name="problem">
+                <Problem>
+                  <option name="batch">
+                    <Batch>
+                      <option name="id" value="54c64e47-8815-471f-8501-5e4cb8df7060" />
+                      <option name="size" value="1" />
+                    </Batch>
+                  </option>
+                  <option name="group" value="Codeforces - Ejercicios de Trie Persistente" />
+                  <option name="input">
+                    <InputOutput>
+                      <option name="type" value="stdin" />
+                    </InputOutput>
+                  </option>
+                  <option name="languages">
+                    <Languages>
+                      <option name="java">
+                        <JavaLanguage>
+                          <option name="mainClass" value="Main" />
+                          <option name="taskClass" value="AHistorialDeDiccionario" />
+                        </JavaLanguage>
+                      </option>
+                    </Languages>
+                  </option>
+                  <option name="memoryLimit" value="256" />
+                  <option name="name" value="A. Historial de Diccionario" />
+                  <option name="output">
+                    <InputOutput>
+                      <option name="type" value="stdout" />
+                    </InputOutput>
+                  </option>
+                  <option name="tests">
+                    <list>
+                      <TestCase>
+                        <option name="input" value="12&#10;1 casa&#10;1 cama&#10;1 cosa&#10;3 ca&#10;2 1&#10;3 ca&#10;1 carro&#10;3 c&#10;2 4&#10;3 c&#10;1 casa&#10;3 casa&#10;" />
+                        <option name="output" value="2&#10;1&#10;2&#10;3&#10;2&#10;" />
+                      </TestCase>
+                    </list>
+                  </option>
+                  <option name="timeLimit" value="1000" />
+                  <option name="url" value="https://codeforces.com/group/apQ6meuqNq/contest/719798/problem/A" />
+                </Problem>
+              </option>
+              <option name="testCases">
+                <list>
+                  <TestCase>
+                    <option name="input" value="12&#10;1 casa&#10;1 cama&#10;1 cosa&#10;3 ca&#10;2 1&#10;3 ca&#10;1 carro&#10;3 c&#10;2 4&#10;3 c&#10;1 casa&#10;3 casa&#10;" />
+                    <option name="output" value="2&#10;1&#10;2&#10;3&#10;2&#10;" />
+                  </TestCase>
+                </list>
+              </option>
+            </ProblemData>
+          </value>
+        </entry>
+        <entry key="JAVA:a_llave_xor">
+          <value>
+            <ProblemData>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/problems/a_llave_xor/JSolution.java" />
+              <option name="language" value="JAVA" />
+              <option name="problem">
+                <Problem>
+                  <option name="batch">
+                    <Batch>
+                      <option name="id" value="2916c029-ef91-48fe-bcc0-97350dbafd75" />
+                      <option name="size" value="1" />
+                    </Batch>
+                  </option>
+                  <option name="group" value="Codeforces - Simulacro de Examen Parcial - Parte Implementativa" />
+                  <option name="input">
+                    <InputOutput>
+                      <option name="type" value="stdin" />
+                    </InputOutput>
+                  </option>
+                  <option name="languages">
+                    <Languages>
+                      <option name="java">
+                        <JavaLanguage>
+                          <option name="mainClass" value="Main" />
+                          <option name="taskClass" value="ALlaveXor" />
+                        </JavaLanguage>
+                      </option>
+                    </Languages>
+                  </option>
+                  <option name="memoryLimit" value="256" />
+                  <option name="name" value="A. Llave Xor" />
+                  <option name="output">
+                    <InputOutput>
+                      <option name="type" value="stdout" />
+                    </InputOutput>
+                  </option>
+                  <option name="tests">
+                    <list>
+                      <TestCase>
+                        <option name="input" value="1&#10;15 8&#10;1 2 3 4 5 6 7 8 9 10 11 12 13 14 15&#10;10 6 10&#10;1023 7 7&#10;33 5 8&#10;182 5 10&#10;181 1 13&#10;5 10 15&#10;99 8 9&#10;33 10 14&#10;" />
+                        <option name="output" value="13&#10;1016&#10;41&#10;191&#10;191&#10;15&#10;107&#10;47&#10;" />
+                      </TestCase>
+                    </list>
+                  </option>
+                  <option name="timeLimit" value="2000" />
+                  <option name="url" value="https://codeforces.com/group/apQ6meuqNq/contest/717314/problem/A" />
+                </Problem>
+              </option>
+              <option name="testCases">
+                <list>
+                  <TestCase>
+                    <option name="input" value="1&#10;15 8&#10;1 2 3 4 5 6 7 8 9 10 11 12 13 14 15&#10;10 6 10&#10;1023 7 7&#10;33 5 8&#10;182 5 10&#10;181 1 13&#10;5 10 15&#10;99 8 9&#10;33 10 14&#10;" />
+                    <option name="output" value="13&#10;1016&#10;41&#10;191&#10;191&#10;15&#10;107&#10;47&#10;" />
+                  </TestCase>
+                </list>
+              </option>
+            </ProblemData>
+          </value>
+        </entry>
+        <entry key="JAVA:a_watermelon">
+          <value>
+            <ProblemData>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/problems/a_watermelon/JSolution.java" />
+              <option name="language" value="JAVA" />
+              <option name="problem">
+                <Problem>
+                  <option name="batch">
+                    <Batch>
+                      <option name="id" value="655b4aab-a65b-432d-81a3-d4e02c7a787b" />
+                      <option name="size" value="1" />
+                    </Batch>
+                  </option>
+                  <option name="group" value="Codeforces - Codeforces Beta Round 4 (Div. 2 Only)" />
+                  <option name="input">
+                    <InputOutput>
+                      <option name="type" value="stdin" />
+                    </InputOutput>
+                  </option>
+                  <option name="languages">
+                    <Languages>
+                      <option name="java">
+                        <JavaLanguage>
+                          <option name="mainClass" value="Main" />
+                          <option name="taskClass" value="AWatermelon" />
+                        </JavaLanguage>
+                      </option>
+                    </Languages>
+                  </option>
+                  <option name="memoryLimit" value="64" />
+                  <option name="name" value="A. Watermelon" />
+                  <option name="output">
+                    <InputOutput>
+                      <option name="type" value="stdout" />
+                    </InputOutput>
+                  </option>
+                  <option name="tests">
+                    <list>
+                      <TestCase>
+                        <option name="input" value="8&#10;" />
+                        <option name="output" value="YES&#10;" />
+                      </TestCase>
+                    </list>
+                  </option>
+                  <option name="timeLimit" value="1000" />
+                  <option name="url" value="https://codeforces.com/problemset/problem/4/A" />
+                </Problem>
+              </option>
+              <option name="testCases">
+                <list>
+                  <TestCase>
+                    <option name="input" value="8&#10;" />
+                    <option name="output" value="YES&#10;" />
+                  </TestCase>
+                </list>
+              </option>
+            </ProblemData>
+          </value>
+        </entry>
+        <entry key="JAVA:b_prefijos_en_rango">
+          <value>
+            <ProblemData>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/problems/b_prefijos_en_rango/JSolution.java" />
+              <option name="language" value="JAVA" />
+              <option name="problem">
+                <Problem>
+                  <option name="batch">
+                    <Batch>
+                      <option name="id" value="8930b923-4eae-4188-b077-03cbda4c94c1" />
+                      <option name="size" value="1" />
+                    </Batch>
+                  </option>
+                  <option name="group" value="Codeforces - Ejercicios de Trie Persistente" />
+                  <option name="input">
+                    <InputOutput>
+                      <option name="type" value="stdin" />
+                    </InputOutput>
+                  </option>
+                  <option name="languages">
+                    <Languages>
+                      <option name="java">
+                        <JavaLanguage>
+                          <option name="mainClass" value="Main" />
+                          <option name="taskClass" value="BPrefijosEnRango" />
+                        </JavaLanguage>
+                      </option>
+                    </Languages>
+                  </option>
+                  <option name="memoryLimit" value="256" />
+                  <option name="name" value="B. Prefijos en Rango" />
+                  <option name="output">
+                    <InputOutput>
+                      <option name="type" value="stdout" />
+                    </InputOutput>
+                  </option>
+                  <option name="tests">
+                    <list>
+                      <TestCase>
+                        <option name="input" value="6 4&#10;arbol&#10;arco&#10;casa&#10;arbusto&#10;ar&#10;cosa&#10;1 6 ar&#10;2 4 arb&#10;3 6 c&#10;5 5 arco&#10;" />
+                        <option name="output" value="4&#10;1&#10;2&#10;0&#10;" />
+                      </TestCase>
+                    </list>
+                  </option>
+                  <option name="timeLimit" value="2000" />
+                  <option name="url" value="https://codeforces.com/group/apQ6meuqNq/contest/719798/problem/B" />
+                </Problem>
+              </option>
+              <option name="testCases">
+                <list>
+                  <TestCase>
+                    <option name="input" value="6 4&#10;arbol&#10;arco&#10;casa&#10;arbusto&#10;ar&#10;cosa&#10;1 6 ar&#10;2 4 arb&#10;3 6 c&#10;5 5 arco&#10;" />
+                    <option name="output" value="4&#10;1&#10;2&#10;0&#10;" />
+                  </TestCase>
+                </list>
+              </option>
+            </ProblemData>
+          </value>
+        </entry>
+        <entry key="JAVA:e_sausage_maximization">
+          <value>
+            <ProblemData>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/problems/e_sausage_maximization/JSolution.java" />
+              <option name="language" value="JAVA" />
+              <option name="problem">
+                <Problem>
+                  <option name="batch">
+                    <Batch>
+                      <option name="id" value="0b7f16d8-eb36-456c-81a1-4f3e2e23a86d" />
+                      <option name="size" value="1" />
+                    </Batch>
+                  </option>
+                  <option name="group" value="Codeforces - Codeforces Round 173 (Div. 2)" />
+                  <option name="input">
+                    <InputOutput>
+                      <option name="type" value="stdin" />
+                    </InputOutput>
+                  </option>
+                  <option name="languages">
+                    <Languages>
+                      <option name="java">
+                        <JavaLanguage>
+                          <option name="mainClass" value="Main" />
+                          <option name="taskClass" value="ESausageMaximization" />
+                        </JavaLanguage>
+                      </option>
+                    </Languages>
+                  </option>
+                  <option name="memoryLimit" value="256" />
+                  <option name="name" value="E. Sausage Maximization" />
+                  <option name="output">
+                    <InputOutput>
+                      <option name="type" value="stdout" />
+                    </InputOutput>
+                  </option>
+                  <option name="tests">
+                    <list>
+                      <TestCase>
+                        <option name="input" value="2&#10;1 2&#10;" />
+                        <option name="output" value="3&#10;" />
+                      </TestCase>
+                      <TestCase>
+                        <option name="input" value="3&#10;1 2 3&#10;" />
+                        <option name="output" value="3&#10;" />
+                      </TestCase>
+                      <TestCase>
+                        <option name="input" value="2&#10;1000 1000&#10;" />
+                        <option name="output" value="1000&#10;" />
+                      </TestCase>
+                    </list>
+                  </option>
+                  <option name="timeLimit" value="2000" />
+                  <option name="url" value="https://codeforces.com/problemset/problem/282/E" />
+                </Problem>
+              </option>
+              <option name="testCases">
+                <list>
+                  <TestCase>
+                    <option name="input" value="2&#10;1 2&#10;" />
+                    <option name="output" value="3&#10;" />
+                  </TestCase>
+                  <TestCase>
+                    <option name="input" value="3&#10;1 2 3&#10;" />
+                    <option name="output" value="3&#10;" />
+                  </TestCase>
+                  <TestCase>
+                    <option name="input" value="2&#10;1000 1000&#10;" />
+                    <option name="output" value="1000&#10;" />
+                  </TestCase>
+                </list>
+              </option>
+            </ProblemData>
+          </value>
+        </entry>
+        <entry key="KOTLIN:a_llave_xor">
+          <value>
+            <ProblemData>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/kotlin/problems/a_llave_xor/KSolution.kt" />
+              <option name="language" value="KOTLIN" />
+              <option name="problem">
+                <Problem>
+                  <option name="batch">
+                    <Batch>
+                      <option name="id" value="ee7ed3b2-7209-4050-8499-ab2033375600" />
+                      <option name="size" value="1" />
+                    </Batch>
+                  </option>
+                  <option name="group" value="Codeforces - Simulacro de Examen Parcial - Parte Implementativa" />
+                  <option name="input">
+                    <InputOutput>
+                      <option name="type" value="stdin" />
+                    </InputOutput>
+                  </option>
+                  <option name="languages">
+                    <Languages>
+                      <option name="java">
+                        <JavaLanguage>
+                          <option name="mainClass" value="Main" />
+                          <option name="taskClass" value="ALlaveXor" />
+                        </JavaLanguage>
+                      </option>
+                    </Languages>
+                  </option>
+                  <option name="memoryLimit" value="256" />
+                  <option name="name" value="A. Llave Xor" />
+                  <option name="output">
+                    <InputOutput>
+                      <option name="type" value="stdout" />
+                    </InputOutput>
+                  </option>
+                  <option name="tests">
+                    <list>
+                      <TestCase>
+                        <option name="input" value="1&#10;15 8&#10;1 2 3 4 5 6 7 8 9 10 11 12 13 14 15&#10;10 6 10&#10;1023 7 7&#10;33 5 8&#10;182 5 10&#10;181 1 13&#10;5 10 15&#10;99 8 9&#10;33 10 14&#10;" />
+                        <option name="output" value="13&#10;1016&#10;41&#10;191&#10;191&#10;15&#10;107&#10;47&#10;" />
+                      </TestCase>
+                    </list>
+                  </option>
+                  <option name="timeLimit" value="2000" />
+                  <option name="url" value="https://codeforces.com/group/apQ6meuqNq/contest/717314/problem/A" />
+                </Problem>
+              </option>
+              <option name="testCases">
+                <list>
+                  <TestCase>
+                    <option name="input" value="1&#10;15 8&#10;1 2 3 4 5 6 7 8 9 10 11 12 13 14 15&#10;10 6 10&#10;1023 7 7&#10;33 5 8&#10;182 5 10&#10;181 1 13&#10;5 10 15&#10;99 8 9&#10;33 10 14&#10;" />
+                    <option name="output" value="13&#10;1016&#10;41&#10;191&#10;191&#10;15&#10;107&#10;47&#10;" />
+                  </TestCase>
+                </list>
+              </option>
+            </ProblemData>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

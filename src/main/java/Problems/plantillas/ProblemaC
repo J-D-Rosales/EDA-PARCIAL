@@ -1,0 +1,142 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+public class Main {
+    static class FastScanner {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer("");
+
+        String next() {
+            while (!st.hasMoreTokens()) {
+                try {
+                    String line = br.readLine();
+                    if (line == null) return null;
+                    st = new StringTokenizer(line);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+    }
+
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner();
+        PrintWriter out = new PrintWriter(System.out);
+
+        int q = sc.nextInt();
+        // 30 bits alcanzan para valores x <= 10^9 < 2^30
+        PersistentTrieKth trie = new PersistentTrieKth(30, q);
+
+        for (int i = 1; i <= q; i++) {
+            int type = sc.nextInt();
+            int v = sc.nextInt();
+            int y = sc.nextInt();
+
+            if (type == 1) {
+                // Insertar 'y' a partir de la versión v
+                trie.update(i, v, y, +1);
+            } else if (type == 2) {
+                // Eliminar 'y' a partir de la versión v
+                trie.update(i, v, y, -1);
+            } else if (type == 3) {
+                // La versión i se mantiene idéntica a la versión v
+                trie.restoreState(i, v);
+                // Consultamos el k-ésimo menor elemento de la versión v (y = k)
+                int ans = trie.queryKth(v, y);
+                out.println(ans);
+            }
+        }
+
+        out.flush();
+        out.close();
+    }
+}
+
+class PersistentTrieKth {
+    TrieNodeKth[] roots;
+    private final int maxBits;
+
+    public PersistentTrieKth(int maxBits, int maxElements) {
+        this.maxBits = maxBits;
+        this.roots = new TrieNodeKth[maxElements + 2];
+        this.roots[0] = new TrieNodeKth(); // Versión 0 (Multiconjunto vacío)
+    }
+
+    // Sirve tanto para INSERTAR (delta = +1) como para ELIMINAR (delta = -1)
+    public void update(int version, int prevVersion, int val, int delta) {
+        this.roots[version] = new TrieNodeKth(this.roots[prevVersion]);
+
+        TrieNodeKth currOld = this.roots[prevVersion];
+        TrieNodeKth currNew = this.roots[version];
+
+        currNew.cnt += delta;
+
+        for (int b = maxBits - 1; b >= 0; b--) {
+            int bit = (val >> b) & 1;
+
+            TrieNodeKth nextOld = (currOld != null) ? currOld.children[bit] : null;
+            TrieNodeKth nextNew = new TrieNodeKth(nextOld);
+
+            nextNew.cnt = (nextOld != null ? nextOld.cnt : 0) + delta;
+            currNew.children[bit] = nextNew;
+
+            currOld = nextOld;
+            currNew = nextNew;
+        }
+    }
+
+    public void restoreState(int version, int targetVersion) {
+        this.roots[version] = this.roots[targetVersion];
+    }
+
+    // Consulta el k-ésimo menor elemento en O(maxBits)
+    public int queryKth(int version, int k) {
+        TrieNodeKth curr = this.roots[version];
+        int ans = 0;
+
+        for (int b = maxBits - 1; b >= 0; b--) {
+            int leftCnt = (curr.children[0] != null) ? curr.children[0].cnt : 0;
+
+            if (k <= leftCnt) {
+                // El k-ésimo elemento está en el subárbol izquierdo (bit '0')
+                curr = curr.children[0];
+            } else {
+                // El k-ésimo elemento está en el subárbol derecho (bit '1')
+                k -= leftCnt;
+                ans |= (1 << b); // Añadimos el bit '1' al número resultante
+                curr = curr.children[1];
+            }
+        }
+
+        return ans;
+    }
+}
+
+class TrieNodeKth {
+    TrieNodeKth[] children;
+    int cnt; // Frecuencia acumulada en este subárbol
+
+    public TrieNodeKth() {
+        this.children = new TrieNodeKth[2];
+        this.cnt = 0;
+    }
+
+    public TrieNodeKth(TrieNodeKth old) {
+        this.children = new TrieNodeKth[2];
+        if (old != null) {
+            this.children[0] = old.children[0];
+            this.children[1] = old.children[1];
+            this.cnt = old.cnt;
+        } else {
+            this.cnt = 0;
+        }
+    }
+}

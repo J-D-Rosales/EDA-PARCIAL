@@ -1,0 +1,146 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+public class Main {
+    static class FastScanner {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer("");
+
+        String next() {
+            while (!st.hasMoreTokens()) {
+                try {
+                    String line = br.readLine();
+                    if (line == null) return null;
+                    st = new StringTokenizer(line);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+    }
+
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner();
+        PrintWriter out = new PrintWriter(System.out);
+
+        int n = sc.nextInt();
+        int[] p = new int[n + 1];
+        int[] a = new int[n + 1];
+        int[] depth = new int[n + 1];
+
+        // 30 bits alcanzan para a_i <= 10^9 < 2^30
+        PersistentTrieTree trie = new PersistentTrieTree(30, n);
+
+        for (int i = 1; i <= n; i++) {
+            p[i] = sc.nextInt();
+            a[i] = sc.nextInt();
+
+            if (i == 1) {
+                depth[1] = 1;
+                trie.insert(1, 0, a[1], depth[1]);
+            } else {
+                depth[i] = depth[p[i]] + 1;
+                // La versión i se crea heredando de la versión del padre p[i]
+                trie.insert(i, p[i], a[i], depth[i]);
+            }
+        }
+
+        int q = sc.nextInt();
+        for (int k = 0; k < q; k++) {
+            int u = sc.nextInt();
+            int w = sc.nextInt();
+            int x = sc.nextInt();
+
+            // Filtramos en la versión u para tomar solo elementos con depth >= depth[w]
+            int ans = trie.queryMaxXor(u, x, depth[w]);
+            out.println(ans);
+        }
+
+        out.flush();
+        out.close();
+    }
+}
+
+class PersistentTrieTree {
+    TrieNodeTree[] roots;
+    private final int maxBits;
+
+    public PersistentTrieTree(int maxBits, int maxElements) {
+        this.maxBits = maxBits;
+        this.roots = new TrieNodeTree[maxElements + 2];
+        this.roots[0] = new TrieNodeTree(); // Versión 0 vacía
+    }
+
+    public void insert(int version, int parentVersion, int val, int depth) {
+        this.roots[version] = new TrieNodeTree(this.roots[parentVersion]);
+
+        TrieNodeTree currOld = this.roots[parentVersion];
+        TrieNodeTree currNew = this.roots[version];
+
+        currNew.maxDepth = Math.max(currNew.maxDepth, depth);
+
+        for (int b = maxBits - 1; b >= 0; b--) {
+            int bit = (val >> b) & 1;
+
+            TrieNodeTree nextOld = (currOld != null) ? currOld.children[bit] : null;
+            TrieNodeTree nextNew = new TrieNodeTree(nextOld);
+
+            nextNew.maxDepth = Math.max(nextNew.maxDepth, depth);
+            currNew.children[bit] = nextNew;
+
+            currOld = nextOld;
+            currNew = nextNew;
+        }
+    }
+
+    public int queryMaxXor(int uVersion, int x, int minDepth) {
+        TrieNodeTree curr = this.roots[uVersion];
+        int maxXor = 0;
+
+        for (int b = maxBits - 1; b >= 0; b--) {
+            int bitX = (x >> b) & 1;
+            int preferredBit = 1 - bitX;
+
+            // Validamos que el hijo deseado exista Y tenga al menos un nodo con depth >= minDepth
+            if (curr.children[preferredBit] != null && curr.children[preferredBit].maxDepth >= minDepth) {
+                maxXor |= (1 << b);
+                curr = curr.children[preferredBit];
+            } else if (curr.children[bitX] != null) {
+                curr = curr.children[bitX];
+            } else {
+                break;
+            }
+        }
+
+        return maxXor;
+    }
+}
+
+class TrieNodeTree {
+    TrieNodeTree[] children;
+    int maxDepth;
+
+    public TrieNodeTree() {
+        this.children = new TrieNodeTree[2];
+        this.maxDepth = -1;
+    }
+
+    public TrieNodeTree(TrieNodeTree old) {
+        this.children = new TrieNodeTree[2];
+        if (old != null) {
+            this.children[0] = old.children[0];
+            this.children[1] = old.children[1];
+            this.maxDepth = old.maxDepth;
+        } else {
+            this.maxDepth = -1;
+        }
+    }
+}
